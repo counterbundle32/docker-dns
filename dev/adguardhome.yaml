@@ -1,0 +1,43 @@
+version: "3.9"
+########################### Source
+#https://www.smarthomebeginner.com/adguard-home-docker-compose-guide/
+##https://www.youtube.com/watch?v=swsSFdHxe7g
+########################### NETWORKS
+#networks:
+  #default:
+    #driver: bridge
+  #dockervlan:
+    #name: dockervlan
+    #driver: macvlan
+    #driver_opts:
+      #parent: enp3s0 # using ifconfig
+    #ipam:
+      #config:
+        #- subnet: "192.168.0.0/24"
+          #ip_range: "192.168.0.64/27"
+          #gateway: "192.168.0.1"
+## sudo docker network create -d macvlan -o parent=enp3s0 --subnet=192.168.0.0/24 --gateway=192.168.0.1 --ip-range=192.0.68.150/32 ag_home
+########################### SERVICES
+services:
+# AdGuard Home - DNS AdBlocking
+  adguardhome:
+    container_name: adguardhome
+    image: adguard/adguardhome
+    restart: unless-stopped
+    network_mode: 'host'
+    #networks:
+      #dockervlan:
+        #ipv4_address: 192.168.0.65 # IP address inside the defined range
+    ports:
+      - 53:53/udp
+      - 67:67/udp 
+      - 68:68/tcp 
+      - 68:68/udp 
+      - 80:80/tcp 
+      - 443:443/tcp 
+      - 853:853/tcp 
+      - 3000:3000/tcp 
+    volumes:
+      - /home/atort88/docker/adguardhome/conf:/opt/adguardhome/conf
+      - /home/atort88/docker/adguardhome/work:/opt/adguardhome/work
+      
